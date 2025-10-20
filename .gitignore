@@ -1,0 +1,7 @@
+.vs/
+# Build folders
+bin/
+obj/
+
+# App settings files
+appsettings*.json
