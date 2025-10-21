@@ -22,13 +22,13 @@ namespace Uracle.Infrastructure.Interceptors
             {
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreatedBy = "mehmet";
+                    entry.Entity.CreatedBy = "Hieu_nguyen";
                     entry.Entity.CreatedAt = DateTime.UtcNow;
                 }
 
                 if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
                 {
-                    entry.Entity.LastModifiedBy = "mehmet";
+                    entry.Entity.LastModifiedBy = "Hieu_nguyen";
                     entry.Entity.LastModified = DateTime.UtcNow;
                 }
             }

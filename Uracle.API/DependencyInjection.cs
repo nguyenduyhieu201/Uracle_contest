@@ -1,6 +1,4 @@
-﻿using SharedKernel.Exceptions.Handler;
-
-namespace Uracle.API
+﻿namespace Uracle.API
 {
     public static class DependencyInjection
     {
@@ -8,8 +6,23 @@ namespace Uracle.API
         {
             services.AddCarter();
             services.AddExceptionHandler<CustomExceptionHandler>();
+            services.AddHealthChecks();
+
             // Add API related services here
             return services;
+        }
+
+        public static WebApplication UseApiServices(this WebApplication app)
+        {
+
+            app.MapCarter();
+            app.UseExceptionHandler(option => { });
+            app.UseHealthChecks("/health",
+                new HealthCheckOptions
+                {
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+            return app;
         }
     }
 }

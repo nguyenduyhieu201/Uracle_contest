@@ -1,3 +1,4 @@
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,19 +8,25 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddApiServices()
+                .AddApplicationServices(builder.Configuration)
+                .AddInfrastructureServices(builder.Configuration);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    await app.InitialiseDatabaseAsync();
 }
 
 app.UseHttpsRedirection();
+app.UseApiServices();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
+ 
 app.Run();

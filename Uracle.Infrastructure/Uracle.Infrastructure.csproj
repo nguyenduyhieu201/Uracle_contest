@@ -12,16 +12,18 @@
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.10" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Configurations\" />
     <Folder Include="Extensions\" />
-    <Folder Include="Data\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Uracle.Application\Uracle.Application.csproj" />
+    <ProjectReference Include="..\Uracle.Domain\Uracle.Domain.csproj" />
   </ItemGroup>
 
 </Project>

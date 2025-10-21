@@ -47,7 +47,7 @@ namespace Uracle.Application.Commands.UsersCommand
         private async Task<User?> ValidateAsync(string username, string password, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetByUserNameAsync(username, cancellationToken);
-            if (user == null || !user.IsActive)
+            if (user == null)
             {
                 return null;
             }

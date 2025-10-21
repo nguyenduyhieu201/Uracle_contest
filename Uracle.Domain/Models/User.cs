@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Uracle.Domain.Abstractions;
+using Uracle.Domain.ValueObjects;
 
 namespace Uracle.Domain.Models
 {
@@ -14,10 +16,9 @@ namespace Uracle.Domain.Models
         public string Lastname { get; set; } = string.Empty;
     }
 
-    public class User
+    public class User : Entity<UserId>
     {
 
-        public string Id { get; set; } = string.Empty;
 
         public string Username { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
