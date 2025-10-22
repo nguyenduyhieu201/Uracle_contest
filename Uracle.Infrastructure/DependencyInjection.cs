@@ -18,6 +18,9 @@ namespace Uracle.Infrastructure
             {
                 options.UseSqlServer(connectionString);
             });
+
+            services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
+
             return services;
         }
     }
