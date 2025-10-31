@@ -19,6 +19,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{FEB3FB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Uracle.Test", "Uracle.Test", "{0E90C612-47FB-4FD8-8B39-056B7C689D74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uracle.Tests", "Uracle.Tests\Uracle.Tests.csproj", "{04B87BA7-DD57-0696-CE77-823EE1F8CF85}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +52,10 @@ Global
 		{B27F961E-B817-4044-83B7-494B5FCBE301}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B27F961E-B817-4044-83B7-494B5FCBE301}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B27F961E-B817-4044-83B7-494B5FCBE301}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04B87BA7-DD57-0696-CE77-823EE1F8CF85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04B87BA7-DD57-0696-CE77-823EE1F8CF85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04B87BA7-DD57-0696-CE77-823EE1F8CF85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04B87BA7-DD57-0696-CE77-823EE1F8CF85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +66,7 @@ Global
 		{6757C197-1C00-418A-BE0C-061C3C4AFA17} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{E0107532-72B4-40E3-8EF3-E161C1A1F2E8} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{B27F961E-B817-4044-83B7-494B5FCBE301} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{04B87BA7-DD57-0696-CE77-823EE1F8CF85} = {0E90C612-47FB-4FD8-8B39-056B7C689D74}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {56AA7279-5D32-402D-ACC7-2BB2EECF6110}
