@@ -6,8 +6,9 @@ global using Uracle.Application.Abstractions.Interfaces;
 global using Uracle.Application.Abstractions.Security;
 global using Uracle.Application.DTOs;
 global using Uracle.Domain.Models;
-
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using SharedKernel.Behaviours;
 global using System.Reflection;
+global using SharedKernel.Domains;
+global using Uracle.Application.Commands.UsersCommand;

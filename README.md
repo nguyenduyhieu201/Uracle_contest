@@ -1,3 +1,4 @@
+# I. Database Design
 erDiagram
   Users {
     ObjectId _id PK
@@ -178,7 +179,7 @@ erDiagram
   Users }o--o{ Contests : "participates"
 
 
-  # I. Requirements
+  # II. Requirements
 
 ## Auth
 
@@ -258,6 +259,31 @@ erDiagram
 
 • Đồng bộ hoạt động thủ công theo batch: **`POST /api/admin/sync-activity-data`** (yêu cầu **`authenticateApiKey`**).
 
-# II. Database Design
 
-![Database_design.png](attachment:700a560b-bfb2-4f9f-8670-57f4ad1c790e:Database_design.png)
+# III. Bounded Context
+# **Bounded Contexts**
+
+- **Identity & Access**
+    - Entities: User
+    - Responsibilities: AuthN/AuthZ, JWT refresh, password reset, Strava OAuth token storage/refresh.
+    - External: Strava OAuth.
+- **Groups & Membership**
+    - Entities: Group, GroupMember, JoinRequest
+    - Responsibilities: Group CRUD, privacy, membership, join-approve workflow, member counts.
+- **Contests**
+    - Entities: Contest
+    - Responsibilities: Contest lifecycle, rules (activity type, pace/distance thresholds), enrollment (team or individual), timelines.
+- **Teams**
+    - Entities: Team (+ embedded TeamMember)
+    - Responsibilities: Team creation within a contest, membership management, team metrics aggregation.
+- **Activities Ingestion**
+    - Entities: WorkoutActivity
+    - Responsibilities: Ingest raw Strava workouts, normalize fields, deduplicate by **`stravaActivityId`**, compute pace, link to User.
+- **Scoring & Leaderboards**
+    - Entities: IndividualContestActivity, TeamMemberActivity
+    - Responsibilities: Filter eligible workouts into contest activities, compute per-user and per-team stats, standings.
+- **Strava Webhooks & Events**
+    - Entities: Event
+    - Responsibilities: Receive Strava events, idempotent processing, retries, DLQ/failed tracking.
+- **Reporting & Analytics** (optional)
+    - Derived views for dashboards, historical insights, trends.

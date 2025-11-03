@@ -16,7 +16,7 @@ namespace Uracle.Infrastructure.Security
         public string Key { get; set; } = string.Empty;
         public string Issuer { get; set; } = string.Empty;
         public string Audience { get; set; } = string.Empty;
-        public int ExpiryInHours { get; set; } = 3;
+        public int ExpiryInHours { get; set; } = 1;
     }
     public class JWTService : IJWTService
     {
@@ -41,10 +41,9 @@ namespace Uracle.Infrastructure.Security
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, "User")
             };
 
             var token = new JwtSecurityToken(
