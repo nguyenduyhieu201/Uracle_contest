@@ -8,18 +8,10 @@ using Uracle.Domain.ValueObjects;
 
 namespace Uracle.Domain.Models
 {
-    public class StravaProfile
+
+
+    public class User : Entity<string>
     {
-        public long Id { get; set; }
-        public string? Username { get; set; }
-        public string Firstname { get; set; } = string.Empty;
-        public string Lastname { get; set; } = string.Empty;
-    }
-
-    public class User : Entity<UserId>
-    {
-
-
         public string Username { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public string? Email { get; set; }
@@ -45,5 +37,19 @@ namespace Uracle.Domain.Models
         public DateTime UpdatedAt { get; set; }
 
         public bool IsActive { get; set; }
+
+        public static User Create(string userName, string passWord, string Email)
+        {
+            return new User
+            {
+                Id = Guid.NewGuid().ToString(),
+                Username = userName,
+                PasswordHash = passWord,
+                Email = Email,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                IsActive = true
+            };
+        }
     }
 }

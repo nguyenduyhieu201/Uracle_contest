@@ -9,6 +9,9 @@ namespace Uracle.Application.Abstractions.Interfaces
 {
     public interface IUserRepository
     {
+        Task AddUserAsync(User user, CancellationToken cancellationToken);
+        public Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken);
         public Task<User> GetByUserNameAsync(string username, CancellationToken cancellationToken);
+        public Task SetRefreshTokenAsync(string UserId, string refreshToken, CancellationToken cancellationToken);
     }
 }

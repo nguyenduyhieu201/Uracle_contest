@@ -48,8 +48,9 @@ namespace Uracle.Infrastructure.Migrations
 
             modelBuilder.Entity("Uracle.Domain.Models.User", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasMaxLength(36)
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<string>("AccessToken")
                         .HasColumnType("nvarchar(max)");

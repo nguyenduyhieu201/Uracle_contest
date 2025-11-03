@@ -8,5 +8,5 @@ global using SharedKernel.Exceptions.Handler;
 global using Uracle.Application;
 global using Uracle.Infrastructure;
 global using Uracle.Infrastructure.Data.Extensions;
-
+global using Uracle.Application.DTOs;
 

@@ -13,19 +13,21 @@ namespace Uracle.Infrastructure.Data.Extensions
         {
             new User
             {
-                Id = UserId.Of(Guid.NewGuid()),
+                Id = Guid.NewGuid().ToString(),
                 Username = "admin",
                 Email = "admin@example.com",
                 DisplayName = "Administrator",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123")
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
+                CreatedAt = DateTime.UtcNow
             },
             new User
             {
-                Id = UserId.Of(Guid.NewGuid()),
+                Id = Guid.NewGuid().ToString(),
                 Username = "user",
                 Email = "user@example.com",
                 DisplayName = "User",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("User@123")
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("User@123"),
+                CreatedAt = DateTime.UtcNow
             }
         };
         public static IEnumerable<StravaProfile> StravaProfiles => new List<StravaProfile>

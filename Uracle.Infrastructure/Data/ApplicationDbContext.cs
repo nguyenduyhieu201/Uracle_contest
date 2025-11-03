@@ -17,10 +17,9 @@ namespace Uracle.Infrastructure.Data
             {
                 b.HasKey(x => x.Id);
                 b.Property(x => x.Id)
-                    .HasConversion(
-                        id => id.Value,
-                        value => UserId.Of(value))
-                    .ValueGeneratedNever();
+                    .HasMaxLength(36)       // nếu dùng Guid.ToString() có dấu gạch
+                    .IsRequired()
+                    .ValueGeneratedNever(); // app tự set Id, không để DB sinh
             });
         }
     }

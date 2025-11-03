@@ -9,14 +9,14 @@ namespace SharedKernel.Domains
     public class Result<T>
     {
         public bool IsSuccess { get; }
-        public string? Error { get; }
+        public string? Message { get; }
         public T? Value { get; }
         public bool IsFail => !IsSuccess;
 
         private Result(bool isSuccess, string? error, T? value)
         {
             IsSuccess = isSuccess;
-            Error = error;
+            Message = error;
             Value = value;
         }
 

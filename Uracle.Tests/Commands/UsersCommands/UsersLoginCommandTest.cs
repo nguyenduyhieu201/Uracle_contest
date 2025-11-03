@@ -32,7 +32,7 @@ public class UsersLoginCommandTest
     private static User SampleUser()
             => new User
             {
-                Username = "john",
+                Username = "nguyenduyhieu202",
                 PasswordHash = "hashed",
                 IsActive = true
             };
@@ -41,19 +41,19 @@ public class UsersLoginCommandTest
     public async Task Handle_ReturnsSuccess_WhenCredentialsValid()
     {
         var user = SampleUser();
-        _userRepo.Setup(x => x.GetByUserNameAsync("john", It.IsAny<CancellationToken>())).ReturnsAsync(user);
-        _passwordHasher.Setup(x => x.Verify("hashed", user.PasswordHash)).Returns(true);
+        _userRepo.Setup(x => x.GetByUserNameAsync("nguyenduyhieu202", It.IsAny<CancellationToken>())).ReturnsAsync(user);
+        _passwordHasher.Setup(x => x.Verify("P@ssw0rd", user.PasswordHash)).Returns(true);
         _jwtService.Setup(x => x.GenerateToken(user)).Returns("jwt-token");
         _jwtService.Setup(x => x.GenerateRefreshToken()).Returns("refresh-token");
 
         var handler = CreateHandler();
-        var cmd = new UserLoginCommand(new UserLoginDTO("john", "P@ssw0rd"));
+        var cmd = new UserLoginCommand(new UserLoginDTO("nguyenduyhieu202", "P@ssw0rd"));
 
         Result<LoginResponseDto> result = await handler.Handle(cmd, CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeNull();
-        result.Value!.Username.Should().Be("john");
+        result.Value!.Username.Should().Be("nguyenduyhieu202");
         result.Value.JwtToken.Should().Be("jwt-token");
         result.Value.RefreshToken.Should().Be("refresh-token");
     }
@@ -70,22 +70,22 @@ public class UsersLoginCommandTest
         var result = await handler.Handle(cmd, CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Be("Invalid username or password.");
+        result.Message.Should().Be("Invalid username or password.");
     }
 
     [Test]
     public async Task Handle_ReturnsFail_WhenPasswordInvalid()
     {
         var user = SampleUser();
-        _userRepo.Setup(x => x.GetByUserNameAsync("john", It.IsAny<CancellationToken>())).ReturnsAsync(user);
+        _userRepo.Setup(x => x.GetByUserNameAsync("nguyenduyhieu202", It.IsAny<CancellationToken>())).ReturnsAsync(user);
         _passwordHasher.Setup(x => x.Verify("wrong", user.PasswordHash)).Returns(false);
 
         var handler = CreateHandler();
-        var cmd = new UserLoginCommand(new UserLoginDTO("john", "wrong"));
+        var cmd = new UserLoginCommand(new UserLoginDTO("nguyenduyhieu202", "wrong"));
 
         var result = await handler.Handle(cmd, CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Should().Be("Invalid username or password.");
+        result.Message.Should().Be("Invalid username or password.");
     }
 }

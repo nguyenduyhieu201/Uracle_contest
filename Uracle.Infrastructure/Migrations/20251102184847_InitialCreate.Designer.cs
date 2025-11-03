@@ -12,7 +12,7 @@ using Uracle.Infrastructure.Data;
 namespace Uracle.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251021180554_InitialCreate")]
+    [Migration("20251102184847_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -51,8 +51,9 @@ namespace Uracle.Infrastructure.Migrations
 
             modelBuilder.Entity("Uracle.Domain.Models.User", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasMaxLength(36)
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<string>("AccessToken")
                         .HasColumnType("nvarchar(max)");

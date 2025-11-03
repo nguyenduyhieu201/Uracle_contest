@@ -41,6 +41,7 @@ namespace Uracle.Application.Commands.UsersCommand
                 JwtToken = token,
                 RefreshToken = refreshToken
             };
+            await _userRepository.SetRefreshTokenAsync(user.Id, refreshToken, cancellationToken);
             return Result<LoginResponseDto>.Success(responseDto);
         }
 
