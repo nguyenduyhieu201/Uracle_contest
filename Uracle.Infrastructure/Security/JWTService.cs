@@ -82,7 +82,7 @@ namespace Uracle.Infrastructure.Security
             if (user is null) return Result<string>.Fail("cannot find current user");
             return Result<string>.Success(userId);
         }
-
+         
   
     }
 }

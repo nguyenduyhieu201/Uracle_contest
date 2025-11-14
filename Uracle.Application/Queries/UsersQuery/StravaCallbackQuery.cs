@@ -12,9 +12,11 @@ namespace Uracle.Application.Queries.UsersQuery
                 : IQueryHandler<StravaCallbackQuery, Result<StravaCallbackResponse>>
     {
         private IJWTService _jwtService;
-        public StravaCallbackQueryHandler(IJWTService jwtService)
+        private IUserRepository _userRepository;
+        public StravaCallbackQueryHandler(IJWTService jwtService, IUserRepository userRepository)
         {
             _jwtService = jwtService;
+            _userRepository = userRepository;
         }
         public async Task<Result<StravaCallbackResponse>> Handle(StravaCallbackQuery request, CancellationToken cancellationToken)
         {
@@ -24,7 +26,11 @@ namespace Uracle.Application.Queries.UsersQuery
             {
                 return Result<StravaCallbackResponse>.Fail("?error=missing_code");
             }
-
+            if (string.IsNullOrEmpty(request.code))
+            {
+                return Result<StravaCallbackResponse>.Fail("?error=missing_code");
+            }
+            var user = 
         }
     }
 }
