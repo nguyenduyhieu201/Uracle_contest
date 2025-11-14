@@ -1,8 +1,11 @@
-﻿namespace SharedKernel.CQRS
+﻿using MediatR;
+
+namespace SharedKernel.CQRS
 {
-    public interface IQueryHandler <in TQuery, TResponse>
-        where TQuery : IQuery<TResponse>
-        where TResponse : notnull
+    public interface IQueryHandler<in TQuery, TResponse>
+            : IRequestHandler<TQuery, TResponse>
+            where TQuery : IQuery<TResponse>
+            where TResponse : notnull
     {
     }
 }

@@ -1,5 +1,7 @@
 ﻿
 
+using Uracle.Infrastructure.Options;
+
 namespace Uracle.Infrastructure
 {
     public static class DependencyInjection
@@ -13,13 +15,14 @@ namespace Uracle.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
             services.AddScoped<IJWTService, JWTService>();
-
+            services.AddScoped<IStravaService, StravaService>();    
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
                 options.UseSqlServer(connectionString);
             });
 
             services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
+            services.Configure<StravaOptions>(configuration.GetSection("Strava"));
 
             return services;
         }

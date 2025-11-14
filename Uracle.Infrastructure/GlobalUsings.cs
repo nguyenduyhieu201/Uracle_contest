@@ -16,3 +16,4 @@ global using Microsoft.EntityFrameworkCore.SqlServer;
 global using Uracle.Domain.Models;
 global using Uracle.Application.Abstractions.Security;
 global using Uracle.Infrastructure.Security;
+global using Uracle.API.Options;

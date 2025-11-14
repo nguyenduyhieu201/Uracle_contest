@@ -14,7 +14,14 @@ namespace Uracle.API.Endpoints.Users
             {
                 var command = new UserLoginCommand(request.loginDto);
                 var result = await sender.Send(command);
-                if (result.IsFail) return Results.Unauthorized();
+                if (result.IsFail)
+                {
+                    return Results.Json(
+                            new { message = result.Message },
+                            statusCode: StatusCodes.Status401Unauthorized
+                        );
+                }
+
                 var accessCookieOptions = new CookieOptions
                 {
                     HttpOnly = true,

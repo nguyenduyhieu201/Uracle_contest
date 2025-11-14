@@ -1,5 +1,6 @@
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,7 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddApiServices()
+builder.Services.AddApiServices(builder.Configuration)
                 .AddApplicationServices(builder.Configuration)
                 .AddInfrastructureServices(builder.Configuration);
 
@@ -26,7 +27,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseApiServices();
 
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<AuthenticationMiddleware>();
 
 app.MapControllers();
  

@@ -9,7 +9,7 @@ erDiagram
     string bio
     number stravaId
     json stravaProfile
-    string accessToken
+    string AccessToken
     string refreshToken
     number expiresAt
     string jwtRefreshToken
@@ -184,7 +184,7 @@ erDiagram
 ## Auth
 
 - **`POST /api/register`** đăng ký.
-- **`POST /api/login`** đăng nhập, set httpOnly cookies: **`accessToken`**, refreshToken.
+- **`POST /api/login`** đăng nhập, set httpOnly cookies: **`AccessToken`**, refreshToken.
 - **`POST /api/refresh-token`** làm mới token qua cookie.
 - **`POST /api/logout`** xóa cookies.
 - **`POST /api/forgot-password`** yêu cầu reset password.

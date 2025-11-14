@@ -9,4 +9,9 @@ global using Uracle.Application;
 global using Uracle.Infrastructure;
 global using Uracle.Infrastructure.Data.Extensions;
 global using Uracle.Application.DTOs;
+global using Uracle.API.Middleware;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+
+global using Microsoft.IdentityModel.Tokens;
+global using System.Text;
 

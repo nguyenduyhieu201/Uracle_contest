@@ -23,6 +23,11 @@ namespace Uracle.Infrastructure.Repositories
             await _context.SaveChangesAsync(cancellationToken);
         }
 
+        public async Task<User> FindByIdAsync(string Id, CancellationToken cancellationToken)
+        {
+            return await _context.Users.FirstOrDefaultAsync(user => user.Id == Id);
+        }
+
         public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken)
         {
             var user = await _context.Users
