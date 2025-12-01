@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Web.Http.Results;
 
 namespace SharedKernel.Exceptions.Handler
 {
@@ -64,7 +65,7 @@ namespace SharedKernel.Exceptions.Handler
             {
                 problemDetails.Extensions.Add("ValidationErrors", validationException.Errors);
             }
-
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError; ;
             await context.Response.WriteAsJsonAsync(problemDetails, cancellationToken:  cancellationToken);
             return true;
 

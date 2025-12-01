@@ -13,6 +13,7 @@ namespace Uracle.Application.Abstractions.Interfaces
         public Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken);
         public Task<User> GetByUserNameAsync(string username, CancellationToken cancellationToken);
         public Task SetRefreshTokenAsync(string UserId, string refreshToken, CancellationToken cancellationToken);
-        Task<User> FindByIdAsync(string Id, CancellationToken cancellationToken);
+        Task<User?> FindByIdAsync(string Id, CancellationToken cancellationToken);
+        Task UpdateUserTokensAsync(string Id, StravaTokenResponse stravaResponse, CancellationToken cancelToken);
     }
 }

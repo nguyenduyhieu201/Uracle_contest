@@ -36,12 +36,27 @@ namespace Uracle.Infrastructure.Security
             };
         }
 
-        public string GenerateRefreshToken()
+        public string GenerateRefreshToken(User user)
         {
-            var randomNumber = new byte[64];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Value.Key));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim("type", "refresh")
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: _jwtOptions.Value.Issuer,
+                audience: _jwtOptions.Value.Audience,
+                claims: claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddDays(_jwtOptions.Value.RefreshTokenExpiryInDays), // hết hạn sau 7 ngày
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         public string GenerateToken(User user)

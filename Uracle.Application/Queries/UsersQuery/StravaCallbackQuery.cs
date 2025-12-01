@@ -13,15 +13,39 @@ namespace Uracle.Application.Queries.UsersQuery
     {
         private IJWTService _jwtService;
         private IUserRepository _userRepository;
-        public StravaCallbackQueryHandler(IJWTService jwtService, IUserRepository userRepository)
+        private IStravaService _stravaService;
+        public StravaCallbackQueryHandler(IJWTService jwtService, IUserRepository userRepository, IStravaService stravaService)
         {
             _jwtService = jwtService;
             _userRepository = userRepository;
+            _stravaService = stravaService;
         }
+
+        public class StravaCallbackQueryValidator : AbstractValidator<StravaCallbackQuery>
+        {
+            public StravaCallbackQueryValidator()
+            {
+                // state phải có (còn việc state có tồn tại trong DB sẽ check ở handler)
+                RuleFor(x => x.state)
+                    .NotEmpty()
+                    .WithMessage("?error=invalid_state");
+
+                // Nếu client gửi error từ Strava về, bạn đang trả luôn ?error=missing_code
+                RuleFor(x => x.error)
+                    .Must(string.IsNullOrEmpty)
+                    .WithMessage("?error=missing_code");
+
+                // code bắt buộc phải có
+                RuleFor(x => x.code)
+                    .NotEmpty()
+                    .WithMessage("?error=missing_code");
+            }
+        }
+
         public async Task<Result<StravaCallbackResponse>> Handle(StravaCallbackQuery request, CancellationToken cancellationToken)
         {
-            var token = await _jwtService.ValidateUserAsync(request.state);
-            if(token.IsFail) return Result<StravaCallbackResponse>.Fail("?error=invalid_state");
+            var state = await _userRepository.FindByIdAsync(request.state, cancellationToken);
+            if(state == null) return Result<StravaCallbackResponse>.Fail("?error=invalid_state");
             if (!string.IsNullOrEmpty(request.error))
             {
                 return Result<StravaCallbackResponse>.Fail("?error=missing_code");
@@ -30,7 +54,12 @@ namespace Uracle.Application.Queries.UsersQuery
             {
                 return Result<StravaCallbackResponse>.Fail("?error=missing_code");
             }
-            var user = 
+
+            var user = await _stravaService.HandleStravaCallback(request.code, request.error, request.state, cancellationToken);
+            if (user.IsFail) return Result<StravaCallbackResponse>.Fail("?error=strava_auth_failed");
+            var response = new StravaCallbackResponse("?success=true");
+
+            return Result<StravaCallbackResponse>.Success(response);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Uracle.Application.Commands.UsersCommand
                 return Result<LoginResponseDto>.Fail("Invalid username or password.");
             }
             var token = _jwtService.GenerateToken(user);
-            var refreshToken = _jwtService.GenerateRefreshToken();
+            var refreshToken = _jwtService.GenerateRefreshToken(user);
             var responseDto = new LoginResponseDto
             {
                 Username = user.Username,

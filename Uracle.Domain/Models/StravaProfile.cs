@@ -12,5 +12,13 @@ namespace Uracle.Domain.Models
         public string? Username { get; set; }
         public string Firstname { get; set; } = string.Empty;
         public string Lastname { get; set; } = string.Empty;
+
+        public void UpdateFromAthlete(int athleteId, string userName, string firstName, string lastName)
+        {
+            Id = athleteId;
+            Username = userName ?? string.Empty;
+            Firstname = firstName ?? string.Empty;
+            Lastname = lastName ?? string.Empty;
+        }
     }
 }

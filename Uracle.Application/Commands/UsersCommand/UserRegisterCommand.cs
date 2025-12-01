@@ -7,12 +7,15 @@ namespace Uracle.Application.Commands.UsersCommand
     {
         public UserRegisterCommandValidator()
         {
-            RuleFor(x => x.registerDto.Username).NotEmpty().MinimumLength(3);
+            RuleFor(x => x.registerDto.Username).NotEmpty().WithMessage("Username is required");
+            RuleFor(x => x.registerDto.Username).MinimumLength(3).WithMessage("Username must be at least 3 characters.");
             RuleFor(x => x.registerDto.Password)
                         .NotEmpty()
-                        .MinimumLength(6)
-                        .Matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\s])\\S{6,64}$");
-            RuleFor(x => x.registerDto.Email).NotEmpty().EmailAddress();
+                        .WithMessage("Password is required.")
+                        .Matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\s])\\S{6,64}$")
+                        .WithMessage("Password must be 6-64 chars, include upper, lower, digit, special and no spaces.");
+            RuleFor(x => x.registerDto.Email).NotEmpty().WithMessage("Email is required")
+                                            .EmailAddress().WithMessage("Email must match with email format");
         }
     }
     public class UserRegisterCommandHandler : ICommandHandler<UserRegisterCommand, Result<RegisterResponseDto>> 
@@ -51,16 +54,6 @@ namespace Uracle.Application.Commands.UsersCommand
             var username = dto.Username?.Trim() ?? string.Empty;
             var email = dto.Email?.Trim() ?? string.Empty;
             var password = dto.Password ?? string.Empty;
-
-            if (string.IsNullOrWhiteSpace(username)) return "Username is required.";
-            if (string.IsNullOrWhiteSpace(email)) return "Email is required.";
-            if (string.IsNullOrWhiteSpace(password)) return "Password is required.";
-            if (username.Length < 3) return "Username must be at least 3 characters.";
-
-            // Mật khẩu mạnh: 6-64, có hoa, thường, số, ký tự đặc biệt, không khoảng trắng
-            var strong = new Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\s])\\S{6,64}$");
-            if (!strong.IsMatch(password))
-                return "Password must be 8-64 chars, include upper, lower, digit, special and no spaces.";
 
             // Uniqueness
             if (await _userRepository.GetByUserNameAsync(username, cancellationToken) is not null)

@@ -1,6 +1,8 @@
 ﻿
+using Microsoft.Extensions.Options;
 using Uracle.Application.Commands.UsersCommand;
 using Uracle.Application.DTOs;
+using Uracle.Infrastructure.Options;
 using static System.Net.WebRequestMethods;
 
 namespace Uracle.API.Endpoints.Users
@@ -10,7 +12,7 @@ namespace Uracle.API.Endpoints.Users
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/login", async (UserLoginRequest request, ISender sender, HttpContext http) =>
+            app.MapPost("/login", async (UserLoginRequest request, ISender sender, HttpContext http, IOptions<AuthCookieOptions> cfg) =>
             {
                 var command = new UserLoginCommand(request.loginDto);
                 var result = await sender.Send(command);
@@ -25,19 +27,23 @@ namespace Uracle.API.Endpoints.Users
                 var accessCookieOptions = new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = false,            // đặt true khi chạy HTTPS (production)
-                    SameSite = SameSiteMode.Lax, // hoặc Strict nếu không cần gửi khi điều hướng cross-site
-                    Path = "/",               // Access token dùng cho mọi API
-                    Expires = DateTimeOffset.UtcNow.AddMinutes(5) // TTL ngắn
+                    Secure = cfg.Value.Secure,
+                    SameSite = cfg.Value.SameSiteAccess == "Strict"
+                                 ? SameSiteMode.Strict
+                                 : SameSiteMode.Lax,
+                    Path = cfg.Value.AccessToken.Path,
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(cfg.Value.AccessToken.ExpiresInHours)
                 };
 
                 var refreshCookieOptions = new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = false,               // production: true, current is false
-                    SameSite = SameSiteMode.Strict, // chống CSRF tốt hơn cho refresh
-                    Path = "/auth/refresh",      // chỉ gửi cookie này tới route refresh
-                    Expires = DateTimeOffset.UtcNow.AddDays(10) // hoặc theo config
+                    Secure = cfg.Value.Secure,
+                    SameSite = cfg.Value.SameSiteRefresh == "Strict"
+                        ? SameSiteMode.Strict
+                        : SameSiteMode.Lax,
+                    Path = cfg.Value.RefreshToken.Path,
+                    Expires = DateTimeOffset.UtcNow.AddDays(cfg.Value.RefreshToken.ExpiresInDays)
                 };
 
                 http.Response.Cookies.Append("AccessToken", result.Value.JwtToken, accessCookieOptions);

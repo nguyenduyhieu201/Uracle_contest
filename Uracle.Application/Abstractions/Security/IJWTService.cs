@@ -6,7 +6,7 @@ namespace Uracle.Application.Abstractions.Security
     {
         Task<Result<string>> ValidateUserAsync(string jwtToken, CancellationToken cancellation = default); 
         string GenerateToken(User user);
-        string GenerateRefreshToken();
+        string GenerateRefreshToken(User user);
 
     }
 }

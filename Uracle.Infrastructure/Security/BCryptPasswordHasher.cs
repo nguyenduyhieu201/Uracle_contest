@@ -9,11 +9,16 @@ namespace Uracle.Infrastructure.Security
 {
     public class BCryptPasswordHasher : IPasswordHasher
     {
-        private const int WorkFactor = 12;
+        private IConfiguration _configuration;
+        public BCryptPasswordHasher(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         public string Hash(string password)
         {
-            return BCrypt.Net.BCrypt.HashPassword(password, WorkFactor);
+            var workFactor = int.Parse(_configuration["WorkFactor"]);
+            return BCrypt.Net.BCrypt.HashPassword(password, workFactor);
         }
 
         public bool Verify(string password, string hashedPassword)
