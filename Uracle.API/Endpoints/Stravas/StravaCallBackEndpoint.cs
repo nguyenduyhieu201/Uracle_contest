@@ -14,12 +14,10 @@ namespace Uracle.API.Endpoints.Stravas
 
                 // 1) Validate state
                 var FRONTEND_URL = cfg["Frontend:Url"] ?? "http://localhost:3000";
-
-
                 var result = await sender.Send(new StravaCallbackQuery(code, state, error));
                 // This is a placeholder for the Strava callback handling logic.
                 // You would typically extract query parameters, exchange authorization code for tokens, etc.
-                return Results.Ok("Strava callback received");
+                return Results.Redirect(FRONTEND_URL + (result.IsSuccess ? result.Value.url : result.Message));
             }).RequireAuthorization();
         }
     }

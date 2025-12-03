@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Uracle.Application.Abstractions.Interfaces;
+using Uracle.Application.DTOs;
 using Uracle.Domain.Models;
 using Uracle.Infrastructure.Data;
 
@@ -23,7 +25,7 @@ namespace Uracle.Infrastructure.Repositories
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<User> FindByIdAsync(string Id, CancellationToken cancellationToken)
+        public async Task<User?> FindByIdAsync(string Id, CancellationToken cancellationToken)
         {
             return await _context.Users.FirstOrDefaultAsync(user => user.Id == Id);
         }
@@ -44,14 +46,27 @@ namespace Uracle.Infrastructure.Repositories
             return user;
         }
         
-        public async Task SetRefreshTokenAsync(string UserId, string refreshToken, CancellationToken cancellationToken)
+        public async Task SetRefreshTokenAsync(string userId, string refreshToken, CancellationToken cancellationToken)
         {
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Id == UserId, cancellationToken);
+                .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
             if (user != null)
             { 
                 user.JwtRefreshToken = refreshToken;
                 await _context.SaveChangesAsync(cancellationToken);
+            }
+        }
+
+        public async Task UpdateUserTokensAsync(string userId, StravaTokenResponse stravaResponse, CancellationToken cancellationToken)
+        {
+            var user = await _context.Users
+                            .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+            if (user != null)
+            {
+                user.AccessToken = stravaResponse.AccessToken;
+                user.RefreshToken = stravaResponse.RefreshToken;
+                user.ExpiresAt = stravaResponse.ExpiresAt;
+                await _context.SaveChangesAsync();
             }
         }
     }
