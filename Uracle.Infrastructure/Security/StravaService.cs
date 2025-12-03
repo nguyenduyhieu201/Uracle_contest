@@ -46,12 +46,12 @@ namespace Uracle.Infrastructure.Security
             return Result<string>.Success(authorizeUrl);
         }
 
-        public Task<Result<User>> HandleStravaCallback(string code, string? error, string userId)
+        public async Task<Result<User>> HandleStravaCallback(string code, string? error, string userId)
         {
-            if (!string.IsNullOrEmpty(error))
-            {
-                return Task.FromResult(Result<User>.Fail(error));
-            }
+            //if (!string.IsNullOrEmpty(error))
+            //{
+            //    return Result<User>.Fail(error);
+            //}
         }
     }
 }
