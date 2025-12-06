@@ -38,6 +38,8 @@ namespace Uracle.Domain.Models
 
         public bool IsActive { get; set; }
 
+        public virtual ICollection<JoinRequest>? JoinRequests { get; set; }
+
         public static User Create(string userName, string passWord, string Email)
         {
             return new User
