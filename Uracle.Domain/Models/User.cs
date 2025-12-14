@@ -53,5 +53,11 @@ namespace Uracle.Domain.Models
                 IsActive = true
             };
         }
+
+        public void SetResetToken(string resetToken, DateTime expiresAt)
+        {
+            ResetToken = resetToken;
+            ResetTokenExpiry = expiresAt;
+        }
     }
 }

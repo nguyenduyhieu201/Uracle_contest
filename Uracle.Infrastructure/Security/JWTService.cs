@@ -36,6 +36,7 @@ namespace Uracle.Infrastructure.Security
             };
         }
 
+
         public string GenerateRefreshToken(User user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Value.Key));
@@ -97,7 +98,24 @@ namespace Uracle.Infrastructure.Security
             if (user is null) return Result<string>.Fail("cannot find current user");
             return Result<string>.Success(userId);
         }
-         
-  
+
+        public string GeneratePasswordResetToken()
+        {
+            return GenerateSecureToken(32);
+        }
+
+        private static string GenerateSecureToken(int length)
+        {
+            var randomBytes = new byte[length];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomBytes);
+            }
+            return Convert.ToBase64String(randomBytes)
+                .Replace("+", "-")
+                .Replace("/", "_")
+                .Replace("=", "")
+                .Substring(0, Math.Min(length, 32));
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedKernel.Domains;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -55,6 +56,21 @@ namespace Uracle.Infrastructure.Repositories
                 user.JwtRefreshToken = refreshToken;
                 await _context.SaveChangesAsync(cancellationToken);
             }
+        }
+
+        public async Task<Result<User?>> UpdateResetTokenAsync(string userId, string resetToken, DateTime expiresAt, CancellationToken cancellationToken)
+        {
+            var user = await _context.Users
+                        .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+
+            if (user == null)
+            {
+                return Result<User?>.Fail("User not found");
+            }
+
+            user.SetResetToken(resetToken, expiresAt);
+            await _context.SaveChangesAsync(cancellationToken);
+            return Result<User?>.Success(user);
         }
 
         public async Task UpdateUserTokensAsync(string userId, StravaTokenResponse stravaResponse, CancellationToken cancellationToken)

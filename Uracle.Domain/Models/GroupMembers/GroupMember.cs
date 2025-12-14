@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Uracle.Domain.Abstractions;
 
-namespace Uracle.Domain.Models
+namespace Uracle.Domain.Models.GroupMembers
 {
-    public class GroupMembers : Entity<string>
+    public class GroupMember : Entity<string>
     {
         public string UserId { set; get; } = string.Empty;
         public string GroupId { set; get; } = string.Empty;
-        public string Role { set; get; } = "member"; // possible values: member, admin
+        public UserRole Role { set; get; } = 0; // possible values: member, admin
         public DateTime JoinedAt { set; get; } = DateTime.UtcNow;
 
         public User User { set; get; } = null!;

@@ -1,4 +1,5 @@
-﻿using Uracle.Domain.Models;
+﻿using Uracle.Domain.Models.Contests;
+using Uracle.Domain.Models.GroupMembers;
 using Uracle.Domain.ValueObjects;
 
 namespace Uracle.Infrastructure.Data
@@ -9,6 +10,8 @@ namespace Uracle.Infrastructure.Data
                  : base(options) { }
         public DbSet<User> Users => Set<User>();
         public DbSet<StravaProfile> StravaProfiles => Set<StravaProfile>();
+        public DbSet<GroupMember> GroupsMembers => Set<GroupMember>();
+        public DbSet<Contest> Contests => Set<Contest>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -20,6 +23,13 @@ namespace Uracle.Infrastructure.Data
                     .HasMaxLength(36)       // nếu dùng Guid.ToString() có dấu gạch
                     .IsRequired()
                     .ValueGeneratedNever(); // app tự set Id, không để DB sinh
+            });
+
+            modelBuilder.Entity<GroupMember>(b =>
+            {
+                b.Property(x => x.Role)
+                    .HasConversion<string>()        // lưu dưới dạng string
+                    .HasMaxLength(20);
             });
         }
     }

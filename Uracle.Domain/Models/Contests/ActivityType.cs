@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Uracle.Domain.Abstractions;
 
-namespace Uracle.Domain.Models
+namespace Uracle.Domain.Models.Contests
 {
-    public  class Contest : Entity<string>
+    public enum ActivityType
     {
+        Run,
+        Ride,
+        Swim,
+        All
     }
 }

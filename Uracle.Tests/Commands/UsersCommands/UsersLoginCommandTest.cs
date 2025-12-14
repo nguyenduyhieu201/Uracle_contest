@@ -44,7 +44,7 @@ public class UsersLoginCommandTest
         _userRepo.Setup(x => x.GetByUserNameAsync("nguyenduyhieu202", It.IsAny<CancellationToken>())).ReturnsAsync(user);
         _passwordHasher.Setup(x => x.Verify("P@ssw0rd", user.PasswordHash)).Returns(true);
         _jwtService.Setup(x => x.GenerateToken(user)).Returns("jwt-token");
-        _jwtService.Setup(x => x.GenerateRefreshToken()).Returns("refresh-token");
+        _jwtService.Setup(x => x.GenerateRefreshToken(user)).Returns("refresh-token");
 
         var handler = CreateHandler();
         var cmd = new UserLoginCommand(new UserLoginDTO("nguyenduyhieu202", "P@ssw0rd"));
