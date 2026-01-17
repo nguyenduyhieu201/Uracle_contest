@@ -1,6 +1,8 @@
 ﻿
 
-using Uracle.Application.Commands.UsersCommand;
+
+
+using Uracle.Application.DTOs.UsersDto;
 
 namespace Uracle.API.Endpoints.Users
 {
@@ -13,8 +15,12 @@ namespace Uracle.API.Endpoints.Users
             {
                 var command = new UserRegisterCommand(request.registerDto);
                 var result = await sender.Send(command);
-                if (result.IsFail) return Results.BadRequest(result.Message);
-                return Results.Ok(result);
+                if (result.IsFail)
+                {
+                    return Results.Problem(statusCode: (int)result.ErrorCode,
+                                                 detail: result.Message);
+                }
+                return Results.Ok(result.Value);
             });
         }
     }

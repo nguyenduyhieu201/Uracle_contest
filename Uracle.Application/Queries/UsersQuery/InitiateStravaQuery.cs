@@ -1,6 +1,7 @@
 ﻿
 
 using Microsoft.Extensions.Options;
+using Uracle.Application.Abstractions.Services;
 namespace Uracle.Application.Queries.UsersQuery
 {
     public record InitiateStravaQuery(string token) : IQuery<Result<InitiateStravaResponse>>;
@@ -18,7 +19,7 @@ namespace Uracle.Application.Queries.UsersQuery
         {
             var result = await _stravaService.HandleAuthorizeUrl(request.token);
             if (result.IsFail)
-                return Result<InitiateStravaResponse>.Fail(result.Message ?? "Failed to build Strava authorize url");
+                return Result<InitiateStravaResponse>.Fail(result.Message ?? "Failed to build Strava authorize url", result.ErrorCode);
             var url = result.Value!;
             return Result<InitiateStravaResponse>.Success(new InitiateStravaResponse(url));
         }

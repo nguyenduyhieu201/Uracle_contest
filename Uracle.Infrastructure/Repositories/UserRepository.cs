@@ -1,16 +1,4 @@
-﻿using SharedKernel.Domains;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Uracle.Application.Abstractions.Interfaces;
-using Uracle.Application.DTOs;
-using Uracle.Domain.Models;
-using Uracle.Infrastructure.Data;
-
-namespace Uracle.Infrastructure.Repositories
+﻿namespace Uracle.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {
@@ -26,7 +14,7 @@ namespace Uracle.Infrastructure.Repositories
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<User?> FindByIdAsync(string Id, CancellationToken cancellationToken)
+        public async Task<User?> GetUserByIdAsync(string Id, CancellationToken cancellationToken)
         {
             return await _context.Users.FirstOrDefaultAsync(user => user.Id == Id);
         }
@@ -65,7 +53,7 @@ namespace Uracle.Infrastructure.Repositories
 
             if (user == null)
             {
-                return Result<User?>.Fail("User not found");
+                return Result<User?>.Fail("User not found", ErrorCode.NotFound);
             }
 
             user.SetResetToken(resetToken, expiresAt);

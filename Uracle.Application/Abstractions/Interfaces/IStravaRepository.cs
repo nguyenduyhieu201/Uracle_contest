@@ -1,4 +1,6 @@
-﻿namespace Uracle.Application.Abstractions.Interfaces
+﻿using Uracle.Application.DTOs.StravasDto;
+
+namespace Uracle.Application.Abstractions.Interfaces
 {
     public interface IStravaRepository
     {

@@ -1,5 +1,4 @@
-﻿using SharedKernel.Domains;
-using Uracle.Application.Abstractions.Security;
+﻿using Uracle.Application.DTOs.UsersDto;
 
 namespace Uracle.Application.Commands.UsersCommand
 {
@@ -18,9 +17,9 @@ namespace Uracle.Application.Commands.UsersCommand
 
         private IUserRepository _userRepository;
         private IPasswordHasher _passwordHasher;
-        private IJWTService _jwtService;
+        private IJwtService _jwtService;
 
-        public UserLoginCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, IJWTService jwtService)
+        public UserLoginCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtService jwtService)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
@@ -31,7 +30,7 @@ namespace Uracle.Application.Commands.UsersCommand
             var user = await ValidateAsync(request.LoginDTO.Username, request.LoginDTO.Password, cancellationToken);
             if (user == null)
             {
-                return Result<LoginResponseDto>.Fail("Invalid username or password.");
+                return Result<LoginResponseDto>.Fail("Invalid username or password.", ErrorCode.BadRequest);
             }
             var token = _jwtService.GenerateToken(user);
             var refreshToken = _jwtService.GenerateRefreshToken(user);

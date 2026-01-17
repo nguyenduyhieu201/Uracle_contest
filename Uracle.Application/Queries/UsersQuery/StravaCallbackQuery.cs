@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Uracle.Application.Abstractions.Services;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Uracle.Application.Queries.UsersQuery
@@ -12,10 +13,10 @@ namespace Uracle.Application.Queries.UsersQuery
     public class StravaCallbackQueryHandler
                 : IQueryHandler<StravaCallbackQuery, Result<StravaCallbackResponse>>
     {
-        private IJWTService _jwtService;
+        private IJwtService _jwtService;
         private IUserRepository _userRepository;
         private IStravaService _stravaService;
-        public StravaCallbackQueryHandler(IJWTService jwtService, IUserRepository userRepository, IStravaService stravaService)
+        public StravaCallbackQueryHandler(IJwtService jwtService, IUserRepository userRepository, IStravaService stravaService)
         {
             _jwtService = jwtService;
             _userRepository = userRepository;
@@ -45,20 +46,20 @@ namespace Uracle.Application.Queries.UsersQuery
 
         public async Task<Result<StravaCallbackResponse>> Handle(StravaCallbackQuery request, CancellationToken cancellationToken)
         {
-            var state = await _userRepository.FindByIdAsync(request.state, cancellationToken);
-            if(state == null) return Result<StravaCallbackResponse>.Fail("?error=invalid_state");
+            var state = await _userRepository.GetUserByIdAsync(request.state, cancellationToken);
+            if(state == null) return Result<StravaCallbackResponse>.Fail("?error=invalid_state", ErrorCode.Unauthorized);
             if (!string.IsNullOrEmpty(request.error))
             {
 
-                return Result<StravaCallbackResponse>.Fail($"?error={Uri.EscapeDataString(request.error)}");
+                return Result<StravaCallbackResponse>.Fail($"?error={Uri.EscapeDataString(request.error)}", ErrorCode.BadRequest);
             }
             if (string.IsNullOrEmpty(request.code))
             {
-                return Result<StravaCallbackResponse>.Fail("?error=missing_code");
+                return Result<StravaCallbackResponse>.Fail("?error=missing_code", ErrorCode.BadRequest);
             }
 
             var user = await _stravaService.HandleStravaCallback(request.code, request.error, request.state, cancellationToken);
-            if (user.IsFail) return Result<StravaCallbackResponse>.Fail("?error=strava_auth_failed");
+            if (user.IsFail) return Result<StravaCallbackResponse>.Fail("?error=strava_auth_failed", ErrorCode.BadRequest);
             var response = new StravaCallbackResponse("?success=true");
 
             return Result<StravaCallbackResponse>.Success(response);

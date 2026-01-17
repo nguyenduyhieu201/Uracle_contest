@@ -5,6 +5,7 @@ using Uracle.Application.Abstractions.Interfaces;
 using Uracle.Application.Abstractions.Security;
 using Uracle.Application.Commands.UsersCommand;
 using Uracle.Application.DTOs;
+using Uracle.Application.DTOs.UsersDto;
 using Uracle.Domain.Models;
 
 namespace Uracle.Tests;
@@ -14,14 +15,14 @@ public class UsersLoginCommandTest
 {
     private Mock<IUserRepository> _userRepo = null!;
     private Mock<IPasswordHasher> _passwordHasher = null!;
-    private Mock<IJWTService> _jwtService = null!;
+    private Mock<IJwtService> _jwtService = null!;
 
     [SetUp]
     public void SetUp()
     {
         _userRepo = new Mock<IUserRepository>();
         _passwordHasher = new Mock<IPasswordHasher>();
-        _jwtService = new Mock<IJWTService>();
+        _jwtService = new Mock<IJwtService>();
     }
 
     private UserLoginCommandHandler CreateHandler() => new UserLoginCommandHandler(

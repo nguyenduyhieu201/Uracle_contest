@@ -1,10 +1,5 @@
-﻿using SharedKernel.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Uracle.Domain.Models.Contests;
+﻿
+using Uracle.Domain.Enums;
 
 namespace Uracle.Application.Queries.ContestsQuery
 {
@@ -22,45 +17,41 @@ namespace Uracle.Application.Queries.ContestsQuery
         int NumberOfParticipants
     );
     public record GetContestByIdQuery(
-            string ContestId,
-            string CurrentUserId // để check quyền nếu cần
+            string ContestId
         ) : IQuery<Result<ContestDetailDto>>;
     public class GetContestByIdQueryHandler
     : IQueryHandler<GetContestByIdQuery, Result<ContestDetailDto>>
     {
         private readonly IContestRepository _contestReadRepository;
-        private readonly IGroupRepository _groupAuthorization;
 
         public GetContestByIdQueryHandler(
-            IContestRepository contestReadRepository,
-            IGroupRepository groupAuthorization)
+            IContestRepository contestReadRepository)
         {
             _contestReadRepository = contestReadRepository;
-            _groupAuthorization = groupAuthorization;
         }
 
         public async Task<Result<ContestDetailDto>> Handle(
             GetContestByIdQuery request,
             CancellationToken cancellationToken)
         {
-            var contest = await _contestReadRepository.GetByIdAsync(request.ContestId, cancellationToken);
+            var contest = await _contestReadRepository.GetContestByIdAsync(request.ContestId, cancellationToken);
 
-            if (contest.IsFail)
+            if (contest == null)
             {
-                return Result<ContestDetailDto>.Fail("Failed to get Contest detail");
+                return Result<ContestDetailDto>.Fail("Failed to get Contest detail", ErrorCode.NotFound);
             }
 
             var contestDetailDto =  new ContestDetailDto(
-                contest.Value.Id,
-                contest.Value.GroupId,
-                contest.Value.Name,
-                contest.Value.Detail,
-                contest.Value.StartAt,
-                contest.Value.EndAt,
-                contest.Value.ContestType,
-                contest.Value.ActivityType,
-                contest.Value.NumberOfTeams,
-                contest.Value.NumberOfParticipants
+                contest.Id,
+                contest.GroupId,
+                contest.Name,
+                contest.Detail,
+                contest.StartAt,
+                contest.EndAt,
+                contest.ContestType,
+                contest.ActivityType,
+                contest.NumberOfTeams,
+                contest.NumberOfParticipants
             );
             return Result<ContestDetailDto>.Success(contestDetailDto);
         }

@@ -11,6 +11,7 @@ namespace SharedKernel.Domains
         public bool IsSuccess { get; }
         public string? Message { get; }
         public T? Value { get; }
+        public ErrorCode ErrorCode { get;  }
         public bool IsFail => !IsSuccess;
 
         private Result(bool isSuccess, string? error, T? value)
@@ -18,6 +19,14 @@ namespace SharedKernel.Domains
             IsSuccess = isSuccess;
             Message = error;
             Value = value;
+            ErrorCode = ErrorCode.None;
+        }
+        private Result(bool isSuccess, string? error, T? value, ErrorCode errorCode)
+        {
+            IsSuccess = isSuccess;
+            Message = error;
+            Value = value;
+            ErrorCode = errorCode;
         }
 
         public static Result<T> Success(T value)
@@ -25,9 +34,9 @@ namespace SharedKernel.Domains
             return new Result<T>(true, null, value);
         }
 
-        public static Result<T> Fail(string error)
+        public static Result<T> Fail(string error, ErrorCode errorCode)
         {
-            return new Result<T>(false, error, default);
+            return new Result<T>(false, error, default, errorCode);
         }
     }
-}
+ }

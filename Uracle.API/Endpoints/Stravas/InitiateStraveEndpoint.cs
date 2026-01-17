@@ -1,9 +1,4 @@
-﻿
-using MediatR;
-using Uracle.Application.Abstractions.Security;
-using Uracle.Application.Queries.UsersQuery;
-
-namespace Uracle.API.Endpoints.Users
+﻿namespace Uracle.API.Endpoints.Users
 {
     public class InitiateStraveEndpoint : ICarterModule
     {
@@ -15,7 +10,8 @@ namespace Uracle.API.Endpoints.Users
                 var token = httpContext.Request.Cookies["AccessToken"];
                 var result = await sender.Send(new InitiateStravaQuery(token ?? string.Empty));
                 if (result.IsFail)
-                    return Results.BadRequest(result.Message ?? "Failed to initiate Strava connect");
+                    return Results.Problem(statusCode: (int)result.ErrorCode,
+                                                       detail: result.Message);
                 var url = result.Value.AuthorizationUrl;
                 return Results.Redirect(url);
             }).RequireAuthorization();

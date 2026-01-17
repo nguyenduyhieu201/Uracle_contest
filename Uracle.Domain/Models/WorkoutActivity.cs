@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Uracle.Domain.Models
 {
     public class WorkoutActivity
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         public string UserId { get; set; }
 
@@ -30,9 +31,9 @@ namespace Uracle.Domain.Models
 
         public DateTime UpdatedAt { get; set; }
 
-        public virtual IndividualContestActivity? IndividualContestActivity { get; set; }
+        public ICollection<IndividualContestActivity> IndividualContestActivities { get; set; }
 
-        public virtual TeamMemberActivity? TeamMemberActivity { get; set; }
+        public ICollection<TeamMemberActivity?> TeamMemberActivities { get; set; }
 
         public virtual User User { get; set; } = null!;
     }

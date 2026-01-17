@@ -1,0 +1,34 @@
+services:
+  uracle.api:
+    image: ${DOCKER_REGISTRY-}uracleapi
+    build:
+      context: .
+      dockerfile: Uracle.API/Dockerfile
+
+  uracledb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: uracledb
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "SwN12345678"
+      MSSQL_PID: "Express"
+    ports:
+      - "14333:1433"
+    volumes:
+      - uracledb_data:/var/opt/mssql
+    restart: unless-stopped
+
+  uracledis:
+    image: redis:7-alpine
+    container_name: uracledis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - uracledis_data:/data
+    command: redis-server --appendonly yes
+
+volumes:
+  uracledb_data:
+  uracledis_data:
+  

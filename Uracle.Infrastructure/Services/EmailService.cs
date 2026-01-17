@@ -1,11 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Uracle.Infrastructure.Services
+﻿namespace Uracle.Infrastructure.Services
 {
     public class EmailService : IEmailService
     {

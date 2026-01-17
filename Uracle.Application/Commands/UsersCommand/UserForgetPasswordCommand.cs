@@ -1,9 +1,4 @@
-﻿using SharedKernel.Domains;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Uracle.Application.Abstractions.Services;
 
 namespace Uracle.Application.Commands.UsersCommand
 {
@@ -21,10 +16,10 @@ namespace Uracle.Application.Commands.UsersCommand
     public class UserForgetPasswordCommandHandler : ICommandHandler<UserForgetPasswordCommand, Result<bool>>
     {
         private IUserRepository _userRepository;
-        private IJWTService _jwtService;
+        private IJwtService _jwtService;
         private IEmailService _emailService;
         private IPasswordResetTokenRepository _passwordResetTokenRepository;
-        public UserForgetPasswordCommandHandler(IUserRepository userRepository, IPasswordResetTokenRepository passwordResetTokenRepository, IJWTService jwtService, IEmailService emailService)
+        public UserForgetPasswordCommandHandler(IUserRepository userRepository, IPasswordResetTokenRepository passwordResetTokenRepository, IJwtService jwtService, IEmailService emailService)
         {
             _userRepository = userRepository;
             _passwordResetTokenRepository = passwordResetTokenRepository;
@@ -36,7 +31,7 @@ namespace Uracle.Application.Commands.UsersCommand
             var user =  await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
             if (user == null)
             {
-                return Result<bool>.Fail("Email not found");
+                return Result<bool>.Fail("Email not found", ErrorCode.NotFound);
             }
             await _passwordResetTokenRepository.RevokeValidTokensForUserAsync(user.Id, cancellationToken);
             var token = _jwtService.GeneratePasswordResetToken();
@@ -44,7 +39,7 @@ namespace Uracle.Application.Commands.UsersCommand
             await _userRepository.UpdateResetTokenAsync(user.Id, token, expiresAt, cancellationToken);
 
             var resetLink = $"http://localhost:5012/reset-password?token={token}";
-            await _emailService.SendPasswordResetEmailAsync(user.Email, user.FirstName, resetLink);
+            await _emailService.SendPasswordResetEmailAsync(user.Email, user.Username, resetLink);
 
             return null;
             // Here you would typically generate a password reset token and send it via email.

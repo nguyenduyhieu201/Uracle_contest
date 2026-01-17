@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using Uracle.Domain.Abstractions;
-
-namespace Uracle.Domain.Models.Contests
+﻿namespace Uracle.Domain.Models.Contests
 {
     public class Contest : Entity<string>
     {
@@ -13,7 +8,8 @@ namespace Uracle.Domain.Models.Contests
         public string GroupId { get; set; } = string.Empty;
 
         [ForeignKey("User")]
-        public string CreatedBy { get; set; } = string.Empty; // user Id
+        public string CreatedById { get; set; } = string.Empty; // user Id
+        public virtual User CreatedBy { set; get; }
 
         public DateTime StartAt { get; set; }
 
@@ -39,22 +35,20 @@ namespace Uracle.Domain.Models.Contests
             = new List<IndividualContestActivity>();
 
         public virtual ICollection<TeamMemberActivity> TeamMemberActivities { get; set; }
-            = new List<TeamMemberActivity>();
-
-        public virtual ICollection<Team> TeamsNavigation { get; set; }
-            = new List<Team>();
+            = new List<TeamMemberActivity>();   
 
         public virtual ICollection<Team> Teams { get; set; }
             = new List<Team>();
 
-        public virtual ICollection<User> Users { get; set; }
-            = new List<User>();
+        // User tham gia contest (N–N)
+        public virtual ICollection<ContestUser> ContestUsers { get; set; }
+            = new List<ContestUser>();
 
         // Constructor private cho factory method
         private Contest(
             string id,
             string groupId,
-            string createdBy,
+            string createdById,
             string name,
             string? detail,
             DateTime startAt,
@@ -67,7 +61,7 @@ namespace Uracle.Domain.Models.Contests
         {
             Id = id;
             GroupId = groupId;
-            CreatedBy = createdBy;
+            CreatedById = createdById;
             Name = name;
             Detail = detail;
             StartAt = startAt;
@@ -106,5 +100,57 @@ namespace Uracle.Domain.Models.Contests
                 maxPace,
                 minDistance);
         }
+
+        public void Update (
+                string? name,
+                DateTime? startAt,
+                DateTime? endAt,
+                ContestType? contestType
+                // add more optional params if you need to update other fields
+                )
+        {
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                Name = name.Trim();
+            }
+            if (startAt.HasValue)
+            {
+                StartAt = startAt.Value;
+            }
+            if (endAt.HasValue)
+            {
+                EndAt = endAt.Value;
+            }
+            if (contestType.HasValue)
+            {
+                ContestType = contestType.Value;
+            }
+        }
+
+        public bool HasStarted(DateTime now) => StartAt <= now;
+        public void AddTeam(Team team)
+        {
+            Teams.Add(team);
+            NumberOfTeams++;
+        }
+
+        public void IncreaseParticipants(int count = 1)
+        {
+            NumberOfParticipants += count;
+        }
+
+        public void DecreaseParticipants(int count = 1)
+        {
+            NumberOfParticipants -= count;
+        }
+
+        //public void AddParticipant(User user)
+        //{
+        //    if (_participantIds.Contains(participantId))
+        //        return;
+        //    _participantIds.Add(participantId);
+        //    NumberOfParticipants++;
+        //    UpdatedAt = DateTime.UtcNow;
+        //}
     }
 }

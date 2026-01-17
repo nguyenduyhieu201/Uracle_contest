@@ -29,4 +29,8 @@
     <ProjectReference Include="..\Uracle.Domain\Uracle.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Commands\TeamsCommand\" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿
+using Uracle.Application.DTOs.UsersDto;
 
 namespace Uracle.Application.Commands.UsersCommand
 {
@@ -32,7 +33,7 @@ namespace Uracle.Application.Commands.UsersCommand
             string validationError = await ValidateNewUserAsync(request.registerDto, cancellationToken);
             if (!string.IsNullOrEmpty(validationError))
             {
-                return Result<RegisterResponseDto>.Fail(validationError);
+                return Result<RegisterResponseDto>.Fail(validationError, ErrorCode.BadRequest);
             }
 
             var hashPassword = _passwordHasher.Hash(request.registerDto.Password);

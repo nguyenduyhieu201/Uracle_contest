@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
 using Moq;
-
+using SharedKernel.Domains;
 using Uracle.Application.Abstractions.Interfaces;
 using Uracle.Application.Abstractions.Security;
 using Uracle.Application.Commands.UsersCommand;
 using Uracle.Application.DTOs;
+using Uracle.Application.DTOs.UsersDto;
 using Uracle.Domain.Models;
 
 namespace Uracle.Tests.Commands.UsersCommands

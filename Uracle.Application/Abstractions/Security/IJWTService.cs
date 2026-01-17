@@ -1,8 +1,7 @@
-﻿using Uracle.Domain.Models;
-
+﻿
 namespace Uracle.Application.Abstractions.Security
 {
-    public interface IJWTService
+    public interface IJwtService
     {
         Task<Result<string>> ValidateUserAsync(string jwtToken, CancellationToken cancellation = default); 
         string GenerateToken(User user);

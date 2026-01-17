@@ -1,9 +1,5 @@
 ﻿
-using Microsoft.Extensions.Options;
-using Uracle.Application.Commands.UsersCommand;
-using Uracle.Application.DTOs;
-using Uracle.Infrastructure.Options;
-using static System.Net.WebRequestMethods;
+using Uracle.Application.DTOs.UsersDto;
 
 namespace Uracle.API.Endpoints.Users
 {
@@ -48,7 +44,7 @@ namespace Uracle.API.Endpoints.Users
 
                 http.Response.Cookies.Append("AccessToken", result.Value.JwtToken, accessCookieOptions);
                 http.Response.Cookies.Append("RefreshToken", result.Value.RefreshToken, refreshCookieOptions);
-                return Results.Ok(result);
+                return Results.Ok(result.Value);
             });
         }
     }

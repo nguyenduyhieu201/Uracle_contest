@@ -1,19 +1,8 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using SharedKernel.Domains;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-
+﻿
 
 namespace Uracle.Infrastructure.Security
 {
-
-    public class JWTService : IJWTService
+    public class JWTService : IJwtService
     {
         private readonly IOptions<JwtOptions> _jwtOptions;
         private readonly IUserRepository _users;
@@ -86,16 +75,16 @@ namespace Uracle.Infrastructure.Security
         public async Task<Result<string>> ValidateUserAsync(string jwtToken, CancellationToken cancellation = default)
         {
             if (string.IsNullOrWhiteSpace(jwtToken))
-                return Result<string>.Fail("Token cannot be empty");
+                return Result<string>.Fail("Token cannot be empty", ErrorCode.BadRequest);
             var handler = new JwtSecurityTokenHandler();
             var principal = handler.ValidateToken(jwtToken, _validationParams, out _);
             string userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString();
 
             if (string.IsNullOrEmpty(userId))
-                return Result<string>.Fail("cannot parse userId");
+                return Result<string>.Fail("cannot parse userId", ErrorCode.BadRequest);
 
-            var user =  await _users.FindByIdAsync(userId, cancellation);
-            if (user is null) return Result<string>.Fail("cannot find current user");
+            var user =  await _users.GetUserByIdAsync(userId, cancellation);
+            if (user is null) return Result<string>.Fail("cannot find current user", ErrorCode.NotFound);
             return Result<string>.Success(userId);
         }
 

@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Uracle.Application.Commands.UsersCommand;
 using Uracle.Application.DTOs;
+using Uracle.Application.DTOs.UsersDto;
 namespace Uracle.Tests.Commands.UsersCommands
 {
     [TestFixture]

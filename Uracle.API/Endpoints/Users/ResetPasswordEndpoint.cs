@@ -10,6 +10,7 @@ namespace Uracle.API.Endpoints.Users
             {
                 var command = new ForgotPasswordCommand(request.Email);
                 var result = await sender.Send(command);
+                
                 //if (result.IsFail) return Results.BadRequest(result.Message);
                 return Results.Ok(result);
             });

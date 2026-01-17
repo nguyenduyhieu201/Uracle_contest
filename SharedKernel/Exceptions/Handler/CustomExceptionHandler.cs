@@ -65,7 +65,7 @@ namespace SharedKernel.Exceptions.Handler
             {
                 problemDetails.Extensions.Add("ValidationErrors", validationException.Errors);
             }
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError; ;
+            context.Response.StatusCode = problemDetails.Status.Value;
             await context.Response.WriteAsJsonAsync(problemDetails, cancellationToken:  cancellationToken);
             return true;
 

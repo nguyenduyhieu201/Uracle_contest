@@ -1,10 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Uracle.Domain.Abstractions;
-
-namespace Uracle.Infrastructure.Interceptors
+﻿namespace Uracle.Infrastructure.Interceptors
 {
     public class AuditableEntityInterceptor : SaveChangesInterceptor
     {

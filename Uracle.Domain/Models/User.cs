@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Uracle.Domain.Abstractions;
+using Uracle.Domain.Models.Contests;
 using Uracle.Domain.ValueObjects;
 
 namespace Uracle.Domain.Models
@@ -38,6 +39,13 @@ namespace Uracle.Domain.Models
 
         public bool IsActive { get; set; }
 
+        // Contest user tạo
+        public virtual ICollection<Contest> CreatedContests { get; set; }
+            = new List<Contest>();
+
+        // Contest user tham gia
+        public virtual ICollection<ContestUser> ContestUsers { get; set; }
+            = new List<ContestUser>();
         public virtual ICollection<JoinRequest>? JoinRequests { get; set; }
 
         public static User Create(string userName, string passWord, string Email)

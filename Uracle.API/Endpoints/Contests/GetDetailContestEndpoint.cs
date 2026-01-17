@@ -1,6 +1,4 @@
 ﻿
-using Uracle.Application.Commands.ContestsCommand;
-using Uracle.Application.Queries.ContestsQuery;
 
 namespace Uracle.API.Endpoints.Contests
 {
@@ -8,20 +6,18 @@ namespace Uracle.API.Endpoints.Contests
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("api/contest/{id}", async (string contestId, ISender sender, HttpContext context) =>
+            app.MapGet("api/contests/{contestId}", async (string contestId, ISender sender, HttpContext context) =>
             {
-                var token = context.Request.Cookies["AccessToken"];
                 var result = await sender.Send(new GetContestByIdQuery(
-                    contestId,
-                    token
+                    contestId
                 ));
                 if (result.IsFail)
                 {
-                    Results.BadRequest(result.Message);
-                }
+                    return Results.Problem(statusCode: (int)result.ErrorCode,
+                                                        detail: result.Message);                
 
-                // Placeholder for creating a contest
-                return Results.Ok(result);
+                }
+                return Results.Ok(result.Value);
             }).RequireAuthorization();
         }
     }

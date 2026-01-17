@@ -1,32 +1,17 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Options;
-using SharedKernel.Domains;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Uracle.Application.DTOs;
-using Uracle.Application.Queries.UsersQuery;
-using Uracle.Infrastructure.Options;
-using static System.Net.WebRequestMethods;
-
+﻿
 namespace Uracle.Infrastructure.Security
 {
     public class StravaService : IStravaService
     {
         private readonly IOptions<StravaOptions> _opts;
-        private readonly IJWTService _jWTService;
+        private readonly IJwtService _jWTService;
         private string STRAVA_AUTHORIZE_URL = "";
         private string Strava_Token_Url = "";
         private readonly HttpClient _http;
         private readonly IUserRepository _userRepository;
         private readonly IStravaRepository _stravaRepository;
         private IConfiguration _configuration;
-        public StravaService(IOptions<StravaOptions> opts, IJWTService jWTService, 
+        public StravaService(IOptions<StravaOptions> opts, IJwtService jWTService, 
                             HttpClient http, IUserRepository userRepository, 
                             IStravaRepository stravaRepository, IConfiguration configuration)
         {
@@ -45,12 +30,12 @@ namespace Uracle.Infrastructure.Security
             var o = _opts.Value;
             if (string.IsNullOrWhiteSpace(o.ClientId) || string.IsNullOrWhiteSpace(o.RedirectUri))
             {
-                return Result<string>.Fail("Strava options not configured");
+                return Result<string>.Fail("Strava options not configured", ErrorCode.BadRequest);
             }
             var validateResult = await _jWTService.ValidateUserAsync(token);
             if (validateResult.IsFail)
             {
-                return Result<string>.Fail("Invalid token");
+                return Result<string>.Fail("Invalid token", ErrorCode.Unauthorized);
             }
             var query = new Dictionary<string, string?>
             {
@@ -90,7 +75,7 @@ namespace Uracle.Infrastructure.Security
             if (!resp.IsSuccessStatusCode)
             {
                 var errBody = await resp.Content.ReadAsStringAsync();
-                return Result<User>.Fail($"Strava authorization failed: {error} (userId: {userId})");
+                return Result<User>.Fail($"Strava authorization failed: {error} (userId: {userId})", ErrorCode.Unauthorized);
             }
             var json = await resp.Content.ReadAsStringAsync();
             var tokenResponse = JsonSerializer.Deserialize<StravaTokenResponse>(json, new JsonSerializerOptions
