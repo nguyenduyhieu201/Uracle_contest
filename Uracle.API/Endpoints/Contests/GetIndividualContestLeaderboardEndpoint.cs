@@ -1,6 +1,6 @@
 ﻿namespace Uracle.API.Endpoints.Contests
 {
-    public class GetIndividualContestLeaderboadhEndpoint : ICarterModule
+    public class GetIndividualContestLeaderboardEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {

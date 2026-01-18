@@ -90,7 +90,7 @@ namespace Uracle.Application.Commands.ContestsCommand
         {
             if (contestUpdateDto.StartAt.HasValue)
             {
-                return contest.EndAt >= contestUpdateDto.StartAt.Value.AddDays(1);
+                return contestUpdateDto.EndAt >= contestUpdateDto.StartAt.Value.AddDays(1);
             }
             else if (contestUpdateDto.EndAt.HasValue)
             {

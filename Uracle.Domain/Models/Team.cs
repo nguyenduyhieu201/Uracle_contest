@@ -39,6 +39,7 @@ namespace Uracle.Domain.Models
             string name
             )
         {
+            Id = Guid.NewGuid().ToString();
             GroupId = groupId;
             ContestId = contestId;
             Name = name;
@@ -55,7 +56,6 @@ namespace Uracle.Domain.Models
             string contestId,
             string name)
             => new(
-                
                 groupId: groupId,
                 contestId: contestId,
                 name: name
