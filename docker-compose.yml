@@ -4,14 +4,16 @@ services:
     build:
       context: .
       dockerfile: Uracle.API/Dockerfile
+    healthcheck: 
+        test: ["CMD", "curl", "-f", "http://localhost:5212/api/health"]
+        interval: 30s
+        timeout: 10s
 
   uracledb:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: uracledb
-    environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "SwN12345678"
-      MSSQL_PID: "Express"
+    env_file:
+      - /.env
     ports:
       - "14333:1433"
     volumes:
