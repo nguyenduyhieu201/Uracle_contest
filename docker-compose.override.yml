@@ -1,0 +1,19 @@
+services:
+  uracle.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=5212
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Server=uracledb,1433;Database=UracleDb;User Id=sa;Password=SwN12345678;Encrypt=False;TrustServerCertificate=True
+      - ConnectionStrings__Redis=uracledis:6379
+    ports:
+      - "5212:5212"
+      - "8081:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on: 
+      - uracledb
+      - uracledis

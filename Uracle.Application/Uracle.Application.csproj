@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!--<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>-->
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
+	<ProjectReference Include="..\Uracle.Domain\Uracle.Domain.csproj" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\TeamMembersCommand\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+</Project>

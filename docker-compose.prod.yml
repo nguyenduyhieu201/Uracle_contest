@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  uracle.api:
+    image: ghcr.io/${GITHUB_REPOSITORY}:latest
+    container_name: uracle-api-prod
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=${DB_CONNECTION_STRING}
+      - ConnectionStrings__Redis=${REDIS_CONNECTION_STRING}
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__Audience=${JWT_AUDIENCE}
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - uracledb
+      - uracledis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  uracledb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: uracle-db-prod
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${DB_PASSWORD}
+      - MSSQL_PID=Standard
+    ports:
+      - "1433:1433"
+    volumes:
+      - uracledb_prod_data:/var/opt/mssql
+    restart: unless-stopped
+
+  uracledis:
+    image: redis:7-alpine
+    container_name: uracle-redis-prod
+    ports:
+      - "6379:6379"
+    volumes:
+      - uracledis_prod_data:/data
+    restart: unless-stopped
+
+volumes:
+  uracledb_prod_data:
+  uracledis_prod_data:
