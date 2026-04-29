@@ -2,6 +2,6 @@
 {
     public interface IPasswordResetTokenRepository
     {
-        public Task RevokeValidTokensForUserAsync(string userId, CancellationToken cancellationToken);
+        public Task<bool> RevokeValidTokensForUserAsync(string userId, CancellationToken cancellationToken);
     }
 }

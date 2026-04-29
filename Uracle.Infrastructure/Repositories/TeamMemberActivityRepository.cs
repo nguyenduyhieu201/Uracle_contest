@@ -46,5 +46,30 @@ namespace Uracle.Infrastructure.Repositories
                         .Where(a => a.TeamId == teamId && a.ContestId == contestId)
                         .ToListAsync(cancellationToken);
         }
+
+        public async Task CreateAsync(TeamMemberActivity activity, CancellationToken ct = default)
+        {
+            _context.TeamMemberActivities.Add(activity);
+            await _context.SaveChangesAsync(ct);
+        }
+
+        public async Task UpdateByWorkoutActivityIdAsync(
+            string workoutActivityId, double distance, int movingTime, string workoutType, double? pace, CancellationToken ct = default)
+        {
+            await _context.TeamMemberActivities
+                .Where(a => a.WorkoutActivityId == workoutActivityId)
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(a => a.Distance, distance)
+                    .SetProperty(a => a.MovingTime, movingTime)
+                    .SetProperty(a => a.WorkoutType, workoutType)
+                    .SetProperty(a => a.Pace, pace), ct);
+        }
+
+        public async Task DeleteByWorkoutActivityIdAsync(string workoutActivityId, CancellationToken ct = default)
+        {
+            await _context.TeamMemberActivities
+                .Where(a => a.WorkoutActivityId == workoutActivityId)
+                .ExecuteDeleteAsync(ct);
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace Uracle.API.Endpoints.Users
         public record RegisterUserRequest(UserRegisterDTO registerDto);
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/register", async (RegisterUserRequest request, ISender sender) =>
+            app.MapPost("/api/register", async (RegisterUserRequest request, ISender sender) =>
             {
                 var command = new UserRegisterCommand(request.registerDto);
                 var result = await sender.Send(command);

@@ -24,7 +24,6 @@ namespace Uracle.Infrastructure.Data.Extensions
             await SeedWorkoutActivitiesAsync(context);
             await SeedContestUsersAsync(context);
             await SeedIndividualContestActivitiesAsync(context);  // THÊM DÒNG NÀY
-
             await SeedTeamsAsync(context);
             await SeedTeamMembersAsync(context);
             await SeedTeamMemberActivitiesAsync(context);

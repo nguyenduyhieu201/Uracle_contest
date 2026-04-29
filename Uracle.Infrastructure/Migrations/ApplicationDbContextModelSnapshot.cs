@@ -303,7 +303,7 @@ namespace Uracle.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("JoinRequest");
+                    b.ToTable("JoinRequests");
                 });
 
             modelBuilder.Entity("Uracle.Domain.Models.Team", b =>
@@ -524,6 +524,61 @@ namespace Uracle.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Uracle.Domain.Models.WebhookEvent", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AspectType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("EventTime")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ObjectId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ObjectType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<long>("OwnerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("ReceivedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<long>("SubscriptionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UpdatesJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ObjectId");
+
+                    b.HasIndex("ReceivedAt");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("WebhookEvents");
                 });
 
             modelBuilder.Entity("Uracle.Domain.Models.WorkoutActivity", b =>

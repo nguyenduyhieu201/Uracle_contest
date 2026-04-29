@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "Uracle.API\\Uracle.API.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Uracle.Worker\\Uracle.Worker.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

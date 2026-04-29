@@ -73,5 +73,64 @@
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<User> UpdatePasswordAsync(User user, string newPasswordHash, CancellationToken cancellationToken)
+        {
+            user.PasswordHash = newPasswordHash;
+            await _context.SaveChangesAsync(cancellationToken);
+            return user;
+        }
+
+        public async Task<List<User>> SearchByNameAsync(string query, CancellationToken cancellationToken)
+        {
+            var lowerQuery = query.ToLower();
+            return await _context.Users
+                .Where(u => u.Username.ToLower().Contains(lowerQuery)
+                         || (u.DisplayName != null && u.DisplayName.ToLower().Contains(lowerQuery))
+                         || (u.Email != null && u.Email.ToLower().Contains(lowerQuery)))
+                .Take(20)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<bool> UpdateProfileAsync(string userId, string? displayName, string? email, string? bio, CancellationToken cancellationToken)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+            if (user == null) return false;
+            if (displayName != null) user.DisplayName = displayName;
+            if (email != null) user.Email = email;
+            if (bio != null) user.Bio = bio;
+            user.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync(cancellationToken);
+            return true;
+        }
+
+        public async Task<List<WorkoutActivity>> GetWorkoutActivitiesByUserIdAsync(string userId, CancellationToken cancellationToken)
+        {
+            return await _context.WorkoutActivities
+                .Where(w => w.UserId == userId)
+                .OrderByDescending(w => w.StartDate)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<User?> GetByStravaIdAsync(long stravaId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.StravaId == stravaId, cancellationToken);
+        }
+
+        public async Task ClearStravaTokensAsync(string userId, CancellationToken cancellationToken = default)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+            if (user == null) return;
+
+            user.AccessToken = null;
+            user.RefreshToken = null;
+            user.ExpiresAt = null;
+            user.StravaId = null;
+            user.StravaProfile = null;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync(cancellationToken);
+        }
     }
 }

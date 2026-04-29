@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Uracle.Domain.ValueObjects
 {
-    public record UserId
+    public record @string
     {
         public Guid Value { get; }
-        private UserId(Guid value) => Value = value;
-        public static UserId Of(Guid value)
+        private @string(Guid value) => Value = value;
+        public static @string Of(Guid value)
         {
             ArgumentNullException.ThrowIfNull(value);
             if (value == Guid.Empty)
@@ -18,7 +18,7 @@ namespace Uracle.Domain.ValueObjects
                 throw new ("UserId cannot be empty.");
             }
 
-            return new UserId(value);
+            return new @string(value);
         }
     }
 }

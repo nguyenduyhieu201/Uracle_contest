@@ -5,7 +5,7 @@
          
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/api/strava/connect", async (ISender sender, HttpContext httpContext) => 
+            app.MapGet("/api/connect/strava", async (ISender sender, HttpContext httpContext) =>
             {
                 var token = httpContext.Request.Cookies["AccessToken"];
                 var result = await sender.Send(new InitiateStravaQuery(token ?? string.Empty));

@@ -5,7 +5,7 @@ namespace Uracle.API.Endpoints.Stravas
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/api/strava/callback", async (ISender sender, HttpContext httpContext, IConfiguration cfg) =>
+            app.MapGet("/api/auth/strava/callback", async (ISender sender, HttpContext httpContext, IConfiguration cfg) =>
             {
                 var code = httpContext.Request.Query["code"].ToString();
                 var state = httpContext.Request.Query["state"].ToString();
@@ -22,7 +22,7 @@ namespace Uracle.API.Endpoints.Stravas
                                                  detail: result.Message);
                 }
                 return Results.Redirect(FRONTEND_URL + (result.IsSuccess ? result.Value.url : result.Message));
-            }).RequireAuthorization();
+            });
         }
     }
 }
