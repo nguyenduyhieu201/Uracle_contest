@@ -24,5 +24,11 @@ namespace Uracle.Application.Abstractions.Interfaces
         Task<List<IndividualContestActivity>> GetByContestAndUserAsync(string contestId, string userId, CancellationToken cancellationToken);
         Task<List<IndividualContestLeaderboardRow>> GetLeaderboardAsync(string contestId, CancellationToken cancellationToken);
         Task<string> GetGroupByContestAsync(string contestId, CancellationToken cancellationToken);
+
+        // Activity-sync helpers
+        Task<List<(Contest contest, string? teamId)>> GetActiveContestsForUserAsync(string userId, DateTime now, CancellationToken ct = default);
+        Task AddIndividualContestActivityAsync(IndividualContestActivity activity, CancellationToken ct = default);
+        Task UpdateIndividualActivitiesByWorkoutIdAsync(string workoutActivityId, double distance, int movingTime, string workoutType, double? pace, CancellationToken ct = default);
+        Task DeleteIndividualActivitiesByWorkoutIdAsync(string workoutActivityId, CancellationToken ct = default);
     }
 }

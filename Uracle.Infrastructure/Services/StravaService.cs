@@ -70,7 +70,7 @@ namespace Uracle.Infrastructure.Security
             {
                 Content = form
             };
-            req.Headers.Accept.ParseAdd("application/json");
+            req.Headers.Accept.ParseAdd("application/x-www-form-urlencoded");
             using var resp = await _http.SendAsync(req);
             if (!resp.IsSuccessStatusCode)
             {

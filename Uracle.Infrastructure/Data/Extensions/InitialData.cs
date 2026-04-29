@@ -30,7 +30,7 @@ namespace Uracle.Infrastructure.Data.Extensions
             {
                 Id = NormalUserId,
                 Username = "user",
-                Email = "user@example.com",
+                Email = "nguyenduyhieu202@example.com",
                 DisplayName = "Regular User",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("User@123"),
                 CreatedAt = DateTime.UtcNow

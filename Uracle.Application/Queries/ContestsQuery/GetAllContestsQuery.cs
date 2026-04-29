@@ -31,7 +31,7 @@ namespace Uracle.Application.Queries.ContestsQuery
             }
             // 1. Lấy group memberships của user
             var memberships = await _groupRepository
-                            .FindByUserId(userId.Value, cancellationToken);
+                            .FindByUserIdAsync(userId.Value, cancellationToken);
 
             if (memberships.Count == 0)
             {

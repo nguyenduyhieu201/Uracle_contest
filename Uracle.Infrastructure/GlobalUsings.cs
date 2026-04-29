@@ -1,4 +1,6 @@
 ﻿global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Logging;
+global using Uracle.Domain.Enums;
 global using Microsoft.EntityFrameworkCore.Diagnostics;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;

@@ -1,3 +1,5 @@
+// Worker.cs is kept as a health-log companion service.
+// The main processing logic lives in ActivityWorker/ActivityWorker.cs.
 namespace Uracle.Worker
 {
     public class Worker : BackgroundService
@@ -13,11 +15,8 @@ namespace Uracle.Worker
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                }
-                await Task.Delay(1000, stoppingToken);
+                _logger.LogInformation("Uracle Worker heartbeat at: {time}", DateTimeOffset.Now);
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
             }
         }
     }

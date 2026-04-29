@@ -9,6 +9,7 @@ namespace Uracle.Infrastructure.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
                  : base(options) { }
+        public DbSet<WebhookEvent> WebhookEvents => Set<WebhookEvent>();
         public DbSet<User> Users => Set<User>();
         public DbSet<Group> Groups => Set<Group>();
         public DbSet<GroupMember> GroupsMembers => Set<GroupMember>();
@@ -18,7 +19,8 @@ namespace Uracle.Infrastructure.Data
         public DbSet<TeamMemberActivity> TeamMemberActivities => Set<TeamMemberActivity>();
         public DbSet<IndividualContestActivity> IndividualContestActivities => Set<IndividualContestActivity>();
         public DbSet<ContestUser> ContestUsers => Set<ContestUser>();
-        public DbSet <WorkoutActivity> WorkoutActivities => Set<WorkoutActivity>();
+        public DbSet<WorkoutActivity> WorkoutActivities => Set<WorkoutActivity>();
+        public DbSet<JoinRequest> JoinRequests => Set<JoinRequest>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -81,6 +83,17 @@ namespace Uracle.Infrastructure.Data
                     .WithMany(u => u.CreatedContests)
                     .HasForeignKey(c => c.CreatedById)
                     .OnDelete(DeleteBehavior.NoAction); // hoặc Restrict
+            });
+
+            modelBuilder.Entity<WebhookEvent>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.AspectType).HasMaxLength(50);
+                entity.Property(e => e.ObjectType).HasMaxLength(50);
+                entity.Property(e => e.Status).HasMaxLength(50);
+                entity.HasIndex(e => e.Status);
+                entity.HasIndex(e => e.ReceivedAt);
+                entity.HasIndex(e => e.ObjectId);
             });
         }
     }

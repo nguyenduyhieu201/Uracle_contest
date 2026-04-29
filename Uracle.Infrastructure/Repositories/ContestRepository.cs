@@ -55,10 +55,6 @@
 
         public async Task<List<User>> GetParticipantsAsync(string contestId, CancellationToken ct)
         {
-            //var participants = await _dbContext.Contests.Where(c => c.Id == contestId)
-            //                                            .SelectMany(c => c.Users)
-            //                                            .ToListAsync(ct);
-            //return participants;
             var participants = await (from c in _dbContext.Contests
                                   join cp in _dbContext.ContestUsers
                                   on c.Id equals cp.ContestId
@@ -198,6 +194,61 @@
             return await _dbContext.Contests.Where(c => c.Id == contestId)
                                             .Select(c => c.GroupId)
                                             .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        // Returns active contests for a user: individual (teamId = null) + team (teamId = team's Id)
+        public async Task<List<(Contest contest, string? teamId)>> GetActiveContestsForUserAsync(
+            string userId, DateTime now, CancellationToken ct = default)
+        {
+            // Individual contests where user is enrolled
+            var individualContests = await (
+                from c in _dbContext.Contests
+                join cu in _dbContext.ContestUsers on c.Id equals cu.ContestId
+                where cu.UserId == userId
+                   && c.StartAt <= now && c.EndAt >= now
+                   && c.ContestType == ContestType.Individual
+                select c
+            ).ToListAsync(ct);
+
+            // Team contests where user is a team member
+            var teamContests = await (
+                from c in _dbContext.Contests
+                join t in _dbContext.Teams on c.Id equals t.ContestId
+                join tm in _dbContext.TeamMembers on t.Id equals tm.TeamId
+                where tm.UserId == userId
+                   && c.StartAt <= now && c.EndAt >= now
+                   && c.ContestType == ContestType.Team
+                select new { Contest = c, TeamId = t.Id }
+            ).ToListAsync(ct);
+
+            var result = individualContests.Select(c => (c, (string?)null)).ToList();
+            result.AddRange(teamContests.Select(x => (x.Contest, (string?)x.TeamId)));
+            return result;
+        }
+
+        public async Task AddIndividualContestActivityAsync(IndividualContestActivity activity, CancellationToken ct = default)
+        {
+            _dbContext.IndividualContestActivities.Add(activity);
+            await _dbContext.SaveChangesAsync(ct);
+        }
+
+        public async Task UpdateIndividualActivitiesByWorkoutIdAsync(
+            string workoutActivityId, double distance, int movingTime, string workoutType, double? pace, CancellationToken ct = default)
+        {
+            await _dbContext.IndividualContestActivities
+                .Where(a => a.WorkoutActivityId == workoutActivityId)
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(a => a.Distance, distance)
+                    .SetProperty(a => a.MovingTime, movingTime)
+                    .SetProperty(a => a.WorkoutType, workoutType)
+                    .SetProperty(a => a.Pace, pace), ct);
+        }
+
+        public async Task DeleteIndividualActivitiesByWorkoutIdAsync(string workoutActivityId, CancellationToken ct = default)
+        {
+            await _dbContext.IndividualContestActivities
+                .Where(a => a.WorkoutActivityId == workoutActivityId)
+                .ExecuteDeleteAsync(ct);
         }
     }
 }

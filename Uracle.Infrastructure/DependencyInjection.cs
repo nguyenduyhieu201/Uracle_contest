@@ -26,7 +26,10 @@ namespace Uracle.Infrastructure
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IUserTeamsCacheService, UserTeamsCacheService>();
             services.AddScoped<IEmailService, EmailService>();
-
+            services.AddSingleton<IRedisQueueService, RedisQueueService>();
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IWorkoutActivityRepository, WorkoutActivityRepository>();
+            services.AddHttpClient<IStravaActivityApiService, StravaActivityApiService>();
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
                 options.UseSqlServer(connectionString);

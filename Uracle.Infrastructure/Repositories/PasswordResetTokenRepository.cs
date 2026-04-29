@@ -9,12 +9,17 @@ namespace Uracle.Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task RevokeValidTokensForUserAsync(string userId, CancellationToken cancellationToken)
+        public async Task<bool> RevokeValidTokensForUserAsync(string userId, CancellationToken cancellationToken)
         {
             var validTokens = await GetValidTokensByUserIdAsync(userId, cancellationToken);
+            if (validTokens == null)
+            {
+                return false;
+            }
             validTokens.ResetToken = null;
             validTokens.ResetTokenExpiry = null;
             await _context.SaveChangesAsync(cancellationToken);
+            return true;
         }
         private async Task<User?> GetValidTokensByUserIdAsync(
                                     string userId,
@@ -22,10 +27,7 @@ namespace Uracle.Infrastructure.Repositories
         {
             return await _context.Users
                 .FirstOrDefaultAsync(u =>
-                    u.Id == userId &&
-                    u.ResetToken != null &&
-                    u.ResetTokenExpiry != null &&
-                    u.ResetTokenExpiry > DateTime.UtcNow,
+                    u.Id == userId, 
                     cancellationToken);
         }
     }

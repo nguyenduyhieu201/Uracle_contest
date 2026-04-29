@@ -8,7 +8,7 @@ namespace Uracle.API.Endpoints.Users
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/login", async (UserLoginRequest request, ISender sender, HttpContext http, IOptions<AuthCookieOptions> cfg) =>
+            app.MapPost("/api/login", async (UserLoginRequest request, ISender sender, HttpContext http, IOptions<AuthCookieOptions> cfg) =>
             {
                 var command = new UserLoginCommand(request.loginDto);
                 var result = await sender.Send(command);

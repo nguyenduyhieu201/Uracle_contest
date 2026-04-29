@@ -1,4 +1,5 @@
-﻿using Uracle.Application.Abstractions.Services;
+﻿using Microsoft.AspNetCore.Identity;
+using Uracle.Application.Abstractions.Services;
 
 namespace Uracle.Application.Commands.UsersCommand
 {
@@ -19,6 +20,8 @@ namespace Uracle.Application.Commands.UsersCommand
         private IJwtService _jwtService;
         private IEmailService _emailService;
         private IPasswordResetTokenRepository _passwordResetTokenRepository;
+        private IPasswordHasher _passwordHasher;
+
         public UserForgetPasswordCommandHandler(IUserRepository userRepository, IPasswordResetTokenRepository passwordResetTokenRepository, IJwtService jwtService, IEmailService emailService)
         {
             _userRepository = userRepository;
@@ -33,7 +36,11 @@ namespace Uracle.Application.Commands.UsersCommand
             {
                 return Result<bool>.Fail("Email not found", ErrorCode.NotFound);
             }
-            await _passwordResetTokenRepository.RevokeValidTokensForUserAsync(user.Id, cancellationToken);
+            var isSuccess = await _passwordResetTokenRepository.RevokeValidTokensForUserAsync(user.Id, cancellationToken);
+            if (!isSuccess)
+            {
+                return Result<bool>.Fail("Failed to revoke existing tokens", ErrorCode.InternalError);
+            }
             var token = _jwtService.GeneratePasswordResetToken();
             var expiresAt = DateTime.UtcNow.AddHours(24); // Hết hạn sau 24h
             await _userRepository.UpdateResetTokenAsync(user.Id, token, expiresAt, cancellationToken);
@@ -41,7 +48,7 @@ namespace Uracle.Application.Commands.UsersCommand
             var resetLink = $"http://localhost:5012/reset-password?token={token}";
             await _emailService.SendPasswordResetEmailAsync(user.Email, user.Username, resetLink);
 
-            return null;
+            return Result<bool>.Success(true);
             // Here you would typically generate a password reset token and send it via email.
         }
     }

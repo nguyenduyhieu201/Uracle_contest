@@ -143,14 +143,5 @@
         {
             NumberOfParticipants -= count;
         }
-
-        //public void AddParticipant(User user)
-        //{
-        //    if (_participantIds.Contains(participantId))
-        //        return;
-        //    _participantIds.Add(participantId);
-        //    NumberOfParticipants++;
-        //    UpdatedAt = DateTime.UtcNow;
-        //}
     }
 }

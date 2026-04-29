@@ -6,7 +6,7 @@ namespace Uracle.API.Endpoints.Contests
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("api/contest/create", async (ContestCreateRequest contestCreateDto, ISender sender, HttpContext context) =>
+            app.MapPost("api/contests", async (ContestCreateRequest contestCreateDto, ISender sender, HttpContext context) =>
             {
                 var token = context.Request.Cookies["AccessToken"];
                 var command = new ContestCreateCommand(token,

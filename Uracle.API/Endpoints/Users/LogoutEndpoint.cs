@@ -5,7 +5,7 @@ namespace Uracle.API.Endpoints.Users
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/logout", async (HttpContext http, ISender sender) =>
+            app.MapPost("/api/logout", async (HttpContext http, ISender sender) =>
             {
                 
                 // Xoá cookie AccessToken và RefreshToken

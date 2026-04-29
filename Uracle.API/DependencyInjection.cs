@@ -25,6 +25,15 @@
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(config["Jwt:Key"]!))
                 };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = ctx =>
+                    {
+                        if (ctx.Request.Cookies.TryGetValue("AccessToken", out var token))
+                            ctx.Token = token;
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
             // Configure Authorization

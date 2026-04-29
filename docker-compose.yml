@@ -9,6 +9,16 @@ services:
         interval: 30s
         timeout: 10s
 
+  uracle.worker:
+    image: ${DOCKER_REGISTRY-}uracleworker
+    build:
+      context: .
+      dockerfile: Uracle.Worker/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - uracledb
+      - uracledis
+
   uracledb:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: uracledb

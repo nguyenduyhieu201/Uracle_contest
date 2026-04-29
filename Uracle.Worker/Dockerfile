@@ -11,6 +11,10 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Uracle.Worker/Uracle.Worker.csproj", "Uracle.Worker/"]
+COPY ["SharedKernel/SharedKernel.csproj", "SharedKernel/"]
+COPY ["Uracle.Application/Uracle.Application.csproj", "Uracle.Application/"]
+COPY ["Uracle.Domain/Uracle.Domain.csproj", "Uracle.Domain/"]
+COPY ["Uracle.Infrastructure/Uracle.Infrastructure.csproj", "Uracle.Infrastructure/"]
 RUN dotnet restore "./Uracle.Worker/Uracle.Worker.csproj"
 COPY . .
 WORKDIR "/src/Uracle.Worker"

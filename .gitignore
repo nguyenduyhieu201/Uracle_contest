@@ -2,7 +2,9 @@
 # Build folders
 bin/
 obj/
+.claude/
 
 # App settings files
 appsettings*.json
 
+monitoring/
